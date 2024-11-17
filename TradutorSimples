@@ -1,0 +1,33 @@
+pip install requests python-docx
+
+import requests 
+from docx import Document
+
+subscription_key = "YOUR_SUBSCRIPTION KEY"
+endpoint = "https://api.cognitive.microsofttranslator.com"
+location = "eastus2"
+target_language = 'pt-br'
+
+def translator_document(text, target_language):
+    path = '/translate'
+    constructed_url = endpoint + path
+    headers = {
+        'Ocp-Apim-Subscription-Key': subscription_key,
+        'Ocp-Apim-Subscription-Region': location,
+        'Content-type': 'application/json',
+        'X-ClientTraceId': str(os.urandom(16))
+    }
+    body = [{
+        'text': text
+    }]
+    params = {
+        'api-version': '3.0',
+        'from': 'en',
+        'to': [target_language]
+    }
+    request = requests.post(constructed_url, params=params, headers=headers, json=body)
+    response = request.json()
+    return response[0]["translations"][0]["text"]
+
+
+translator_text("I Know you're somewhere out there, somewhere far away", language_destination)
